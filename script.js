@@ -1,12 +1,8 @@
 let url = window.location.toString();
 let body = document.body;
+let preloader = document.getElementById('page-preloader')
+let newDate = new Date();
 
-const onLoad = document.body.onload = function() {
-  setTimeout( function() {
-  let preloader = document.getElementById('page-preloader')
-  preloader.classList.toggle('load')
- }, 2000)
-}
 
 let getUserName = (url) => {
 	let urlArr = url.split('=');
@@ -16,9 +12,19 @@ let getUserName = (url) => {
   }
   return userName;
 }
+
+let getNewDate = new Promise((resolve, reject) => {
+  setTimeout(() => newDate ? resolve(newDate) : reject('Время не определено'), 2000)
+})
  
-fetch(`https://api.github.com/users/${getUserName(url)}`)
-.then(res => res.json())
+let userInfo = fetch(`https://api.github.com/users/${getUserName(url)}`)
+
+Promise.all([userInfo, getNewDate])
+.then(([infoData, todayDate]) => {
+  recieveData = infoData;
+  recieveTodayDate = todayDate;
+})
+.then(res => recieveData.json())
 .then(json => {
   let userAvatar = json.avatar_url;
   let userLogin = json.login;
@@ -50,10 +56,19 @@ fetch(`https://api.github.com/users/${getUserName(url)}`)
     createUrlEl.appendChild(linkText);
     body.appendChild(createUrlEl)
   }
+
+  let getTodayDate = () => {
+    let createDateEl = document.createElement('p');
+    createDateEl.innerHTML = recieveTodayDate;
+    body.appendChild(createDateEl);
+  }
+
+  preloader.classList.toggle('load')
   getUserLogin();
   getUserAvatar();
   getUserBio();
   getUserUrl()
+  getTodayDate()
 })
 
 .catch(err => alert(`${err} (Информация о пользователе не доступна)`))
