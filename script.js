@@ -21,10 +21,10 @@ let userInfo = fetch(`https://api.github.com/users/${getUserName(url)}`)
 
 Promise.all([userInfo, getNewDate])
 .then(([infoData, todayDate]) => {
-  recieveData = infoData;
-  recieveTodayDate = todayDate;
+  receiveData = infoData;
+  receiveTodayDate = todayDate;
 })
-.then(res => recieveData.json())
+.then(res => receiveData.json())
 .then(json => {
   let userAvatar = json.avatar_url;
   let userLogin = json.login;
@@ -59,7 +59,7 @@ Promise.all([userInfo, getNewDate])
 
   let getTodayDate = () => {
     let createDateEl = document.createElement('p');
-    createDateEl.innerHTML = recieveTodayDate;
+    createDateEl.innerHTML = receiveTodayDate;
     body.appendChild(createDateEl);
   }
 
