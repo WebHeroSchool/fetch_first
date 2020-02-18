@@ -31,7 +31,7 @@ Promise.all([userInfo, getNewDate])
   let userLogin = json.login;
   let userBio = json.bio;
   let userUrl = json.html_url;
-  if (user) {
+  if (userLogin != undefined) {
     let getUserLogin = () => {
       let createLoginEl = document.createElement('h1');
       createLoginEl.innerHTML = userLogin;
